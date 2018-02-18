@@ -1,1 +1,3 @@
-# Calc
+Just a basic calculator for Android. Tested on an S8+ using SDK 24.
+
+Pictures on the way...

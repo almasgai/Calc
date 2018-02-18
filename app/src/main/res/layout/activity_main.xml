@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:autofit="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000"
@@ -19,17 +20,18 @@
         <TableRow
             android:id="@+id/screen"
             android:layout_width="match_parent"
-            android:layout_height="94dp"
+            android:layout_height="match_parent"
             android:background="#222"
-            android:gravity="right">
+            android:gravity="center">
 
-            <TextView
+            <me.grantland.widget.AutofitTextView
                 android:id="@+id/screenText"
-                android:layout_marginVertical="10sp"
-                android:textAlignment="textEnd"
-                android:textColor="#FFF"
-                android:textSize="72sp"
-                android:visibility="visible" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:singleLine="true"
+                android:textSize="40sp"
+                autofit:minTextSize="16sp" />
         </TableRow>
 
 
