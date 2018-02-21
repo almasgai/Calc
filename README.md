@@ -1,7 +1,7 @@
 ### Simple calculator for Android. Tested on an S8+ using SDK 24.
 
-<div style="width:150px">![./screenshots/1.png](./screenshots/1.png)</div>
+<img src="./screenshots/1.png" alt="Uno" style="width: 200px;"/>
 OLED-friendly design
 
-<div style="width:150px">![./screenshots/2.png](./screenshots/2.png)</div>
+<img src="./screenshots/2.png" alt="Dos" style="width: 200px;"/>
 Straightforward and simple!
