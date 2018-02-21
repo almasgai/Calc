@@ -1,6 +1,9 @@
 package com.example.al.calculator;
 
+import android.content.ClipData;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -11,8 +14,6 @@ import java.util.ArrayList;
 
 import me.grantland.widget.AutofitHelper;
 
-import static android.os.Build.VERSION.SDK_INT;
-
 /**
  * Created by Al on 2/17/18.
  */
@@ -21,9 +22,11 @@ public class MainActivity extends AppCompatActivity {
     TextView screen;
     Button clear, negOrPos, percent, divide, seven, eight, nine, multiply, four, five,
             six, minus, one, two, three, plus, zero, decimal, equals;
+    StringBuilder numbersToCalc;
+    boolean clearValsOnScreen = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -49,90 +52,265 @@ public class MainActivity extends AppCompatActivity {
         screen = (TextView) findViewById(R.id.screenText);
         AutofitHelper.create(screen);
 
-        ArrayList<MainActivity> numbersToCalc = new ArrayList<>();
+        numbersToCalc = new StringBuilder("");
 
-        Toast.makeText(this, "Howdy there partner:\t" + SDK_INT, Toast.LENGTH_SHORT).show();
-        
+
+        plus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (screen.getText() != "") {
+                    Integer i = Integer.parseInt(screen.getText().toString());
+                    numbersToCalc.append(i);
+                    numbersToCalc.append('+');
+                    clearValsOnScreen = true;
+                }
+            }
+        });
+
+        minus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (screen.getText() != ""){
+                    Integer i = Integer.parseInt(screen.getText().toString());
+                    numbersToCalc.append(i);
+                    numbersToCalc.append('-');
+                    clearValsOnScreen = true;
+                }
+            }
+        });
+
+        multiply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (screen.getText() != ""){
+                    Integer i = Integer.parseInt(screen.getText().toString());
+                    numbersToCalc.append(i);
+                    numbersToCalc.append('*');
+                    clearValsOnScreen = true;
+                }
+            }
+        });
+
+        divide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (screen.getText() != ""){
+                    Integer i = Integer.parseInt(screen.getText().toString());
+                    numbersToCalc.append(i);
+                    numbersToCalc.append('/');
+                    clearValsOnScreen = true;
+                }
+            }
+        });
+
+        percent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (screen.getText() != ""){
+                    Integer i = Integer.parseInt(screen.getText().toString());
+                    numbersToCalc.append(i);
+                    numbersToCalc.append('/');
+                    clearValsOnScreen = true;
+                }
+            }
+        });
+
+        equals.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MainActivity.this, numbersToCalc.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
         
         clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 screen.setText("");
-            }
-        });
-
-        negOrPos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (getTextfieldText() != ""){
-                    String temp = getTextfieldText();
-                    Integer intTemp = Integer.parseInt(temp);
-
-                    // Determining whether value is pos or negative already and flipping it
-                    intTemp *= -1;
-
-                }else Toast.makeText(MainActivity.this, "Enter a value first", Toast.LENGTH_SHORT).show();
+                numbersToCalc.equals("");
             }
         });
 
         one.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (clearValsOnScreen == true){
+                    screen.setText("");
+                    clearValsOnScreen = false;
+                }
                 screen.append("1");
+
+                one.setTextColor(Color.CYAN);
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        one.setTextColor(Color.WHITE);
+                    }
+                }, 500);
             }
         });
+
         two.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (clearValsOnScreen == true){
+                    screen.setText("");
+                    clearValsOnScreen = false;
+                }
                 screen.append("2");
+                two.setTextColor(Color.CYAN);
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        two.setTextColor(Color.WHITE);
+                    }
+                }, 250);
             }
         });
         three.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (clearValsOnScreen == true){
+                    screen.setText("");
+                    clearValsOnScreen = false;
+                }
                 screen.append("3");
+                three.setTextColor(Color.CYAN);
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        three.setTextColor(Color.WHITE);
+                    }
+                }, 250);
             }
         });
         four.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (clearValsOnScreen == true){
+                    screen.setText("");
+                    clearValsOnScreen = false;
+                }
                 screen.append("4");
+                four.setTextColor(Color.CYAN);
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        four.setTextColor(Color.WHITE);
+                    }
+                }, 250);
             }
         });
         five.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (clearValsOnScreen == true){
+                    screen.setText("");
+                    clearValsOnScreen = false;
+                }
                 screen.append("5");
+                five.setTextColor(Color.CYAN);
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        five.setTextColor(Color.WHITE);
+                    }
+                }, 250);
             }
         });
         six.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (clearValsOnScreen == true){
+                    screen.setText("");
+                    clearValsOnScreen = false;
+                }
                 screen.append("6");
+                six.setTextColor(Color.CYAN);
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        six.setTextColor(Color.WHITE);
+                    }
+                }, 250);
             }
         });
         seven.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (clearValsOnScreen == true){
+                    screen.setText("");
+                    clearValsOnScreen = false;
+                }
                 screen.append("7");
+                seven.setTextColor(Color.CYAN);
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        seven.setTextColor(Color.WHITE);
+                    }
+                }, 250);
             }
         });
         eight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (clearValsOnScreen == true){
+                    screen.setText("");
+                    clearValsOnScreen = false;
+                }
                 screen.append("8");
+                eight.setTextColor(Color.CYAN);
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        eight.setTextColor(Color.WHITE);
+                    }
+                }, 250);
             }
         });
         nine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (clearValsOnScreen == true){
+                    screen.setText("");
+                    clearValsOnScreen = false;
+                }
                 screen.append("9");
+                nine.setTextColor(Color.CYAN);
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        nine.setTextColor(Color.WHITE);
+                    }
+                }, 250);
             }
         });
         zero.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (clearValsOnScreen == true){
+                    screen.setText("");
+                    clearValsOnScreen = false;
+                }
                 screen.append("0");
+                zero.setTextColor(Color.CYAN);
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        zero.setTextColor(Color.WHITE);
+                    }
+                }, 250);
             }
         });
 
@@ -142,5 +320,4 @@ public class MainActivity extends AppCompatActivity {
         String text = screen.getText().toString();
         return text;
     }
-
 }

@@ -8,30 +8,23 @@
     android:background="#000"
     tools:context="com.example.al.calculator.MainActivity">
 
-
     <TableLayout
-        android:stretchColumns="*"
-        android:minHeight="200dp"
         android:id="@+id/tableLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000">
+        android:background="#000"
+        android:minHeight="200dp"
+        android:stretchColumns="*">
 
         <TableRow
             android:id="@+id/screen"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#222"
-            android:gravity="center">
+            android:gravity="center"
+            android:minHeight="100dp">
 
-            <me.grantland.widget.AutofitTextView
-                android:id="@+id/screenText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="2"
-                android:singleLine="true"
-                android:textSize="40sp"
-                autofit:minTextSize="16sp" />
+
         </TableRow>
 
 
@@ -82,12 +75,12 @@
 
 
         <TableRow
-            android:minHeight="120dp"
             android:id="@+id/row1"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:background="#000"
-            android:gravity="center">
+            android:gravity="center"
+            android:minHeight="120dp">
 
             <Button
                 android:id="@+id/seven"
@@ -122,17 +115,17 @@
                 android:layout_height="match_parent"
                 android:background="#000"
                 android:gravity="center"
-                android:text="x"
+                android:text="*"
                 android:textColor="#FFF" />
         </TableRow>
 
         <TableRow
-            android:minHeight="120dp"
             android:id="@+id/row2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#000"
-            android:gravity="center">
+            android:gravity="center"
+            android:minHeight="120dp">
 
             <Button
                 android:id="@+id/four"
@@ -172,12 +165,12 @@
         </TableRow>
 
         <TableRow
-            android:minHeight="120dp"
             android:id="@+id/row3"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:background="#000"
-            android:gravity="center">
+            android:gravity="center"
+            android:minHeight="120dp">
 
             <Button
                 android:id="@+id/one"
@@ -217,12 +210,12 @@
         </TableRow>
 
         <TableRow
-            android:minHeight="120dp"
             android:id="@+id/row4"
             android:layout_width="match_parent"
             android:layout_height="20dp"
             android:background="#000"
-            android:gravity="center">
+            android:gravity="center"
+            android:minHeight="120dp">
 
             <Button
                 android:id="@+id/zero"
@@ -254,5 +247,18 @@
                 android:textColor="#FFF" />
         </TableRow>
     </TableLayout>
+
+    <me.grantland.widget.AutofitTextView
+        android:id="@+id/screenText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textAlignment="viewEnd"
+        android:textColor="#FFF"
+        android:textSize="60sp"
+        autofit:minTextSize="16sp" />
+
+
 
 </RelativeLayout>
