@@ -10,7 +10,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import java.net.Inet4Address;
+import java.util.ArrayList;
 
 import me.grantland.widget.AutofitHelper;
 
@@ -24,9 +25,7 @@ public class MainActivity extends AppCompatActivity {
             six, minus, one, two, three, plus, zero, decimal, equals;
     boolean clearValsOnScreen = false;
     int first, second, answer;
-    boolean isSecond = false;
     char operator;
-    String calculatedAnswer;
 
 
     @Override
@@ -34,126 +33,75 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        clear = (Button) findViewById(R.id.clear);
-        negOrPos = (Button) findViewById(R.id.posOrNeg);
-        percent = (Button) findViewById(R.id.percent);
-        divide = (Button) findViewById(R.id.divide);
-        seven = (Button) findViewById(R.id.seven);
-        eight = (Button) findViewById(R.id.eight);
-        nine = (Button) findViewById(R.id.nine);
-        multiply = (Button) findViewById(R.id.multiply);
-        four = (Button) findViewById(R.id.four);
-        five = (Button) findViewById(R.id.five);
-        six = (Button) findViewById(R.id.six);
-        minus =  (Button) findViewById(R.id.minus);
-        one = (Button) findViewById(R.id.one);
-        two = (Button) findViewById(R.id.two);
-        three = (Button) findViewById(R.id.three);
-        plus = (Button) findViewById(R.id.plus);
-        zero = (Button) findViewById(R.id.zero);
-        decimal = (Button) findViewById(R.id.decimal);
-        equals = (Button) findViewById(R.id.equals);
-        screen = (TextView) findViewById(R.id.screenText);
-        AutofitHelper.create(screen);
+        first = Integer.MIN_VALUE;
+        second = Integer.MIN_VALUE;
 
+
+        clear       = findViewById(R.id.clear);
+        negOrPos    = findViewById(R.id.posOrNeg);
+        percent     = findViewById(R.id.percent);
+        divide      = findViewById(R.id.divide);
+        seven       = findViewById(R.id.seven);
+        eight       = findViewById(R.id.eight);
+        nine        = findViewById(R.id.nine);
+        multiply    = findViewById(R.id.multiply);
+        four        = findViewById(R.id.four);
+        five        = findViewById(R.id.five);
+        six         = findViewById(R.id.six);
+        minus       = findViewById(R.id.minus);
+        one         = findViewById(R.id.one);
+        two         = findViewById(R.id.two);
+        three       = findViewById(R.id.three);
+        plus        = findViewById(R.id.plus);
+        zero        = findViewById(R.id.zero);
+        decimal     = findViewById(R.id.decimal);
+        equals      = findViewById(R.id.equals);
+        screen      = findViewById(R.id.screenText);
+        AutofitHelper.create(screen);
 
         plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isSecond == false && first != 0) {
-                    isSecond = true;
+                if (screen.getText() != "" && first == Integer.MIN_VALUE){
                     first = Integer.parseInt(screen.getText().toString());
-                }else if (isSecond == true){
-                    isSecond = false;
-                    second = Integer.parseInt(screen.getText().toString());
-                }
                     operator = '+';
-                    clearValsOnScreen = true;
-                }
-            });
+                    screen.setText("");
 
-        minus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isSecond == false) {
-                    isSecond = false;
-                    first = Integer.parseInt(screen.getText().toString());
-                }else {
-                    isSecond = true;
+
+                } else if (screen.getText() == "" && first != Integer.MIN_VALUE){
                     second = Integer.parseInt(screen.getText().toString());
-                }
-                operator = '-';
-                clearValsOnScreen = true;
-            }
+                    operator = '+';
+                    equate();
 
-        });
-
-        multiply.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isSecond == false) {
-                    isSecond = false;
-                    first = Integer.parseInt(screen.getText().toString());
-                }else {
-                    isSecond = true;
-                    second = Integer.parseInt(screen.getText().toString());
                 }
-                operator = '*';
-                clearValsOnScreen = true;
+
+                else { Toast.makeText(getApplicationContext(), "Please enter value", Toast.LENGTH_SHORT).show(); }
+
+                screen.setText("");
+
             }
         });
 
-        divide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (screen.getText() != "") {
-                    isSecond = false;
-                    first = Integer.parseInt(screen.getText().toString());
-                }else {
-                    isSecond = true;
-                    second = Integer.parseInt(screen.getText().toString());
-                }
-                operator = '/';
-                clearValsOnScreen = true;
-            }
-        });
-
-        percent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (screen.getText() != "") {
-                    isSecond = false;
-                    first = Integer.parseInt(screen.getText().toString());
-                    first /= 100;
-                }else {
-                    isSecond = true;
-                    second = Integer.parseInt(screen.getText().toString());
-                    second /= 100;
-                }
-                operator = '%';
-                clearValsOnScreen = true;
-            }
-        });
 
         equals.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 switch (operator){
+
                     case '+':
                         answer = first + second;
+                        screen.setText(answer);
                         break;
 
                     case '-':
                         answer = first - second;
                         break;
 
-                    case '/':
-                        answer = first / second;
+                    case '/':   answer = first / second;
                         break;
 
-                    case '*':
-                        answer = first * second;
+                    case '*':   answer = first * second;
                         break;
 
                     default:
@@ -162,14 +110,20 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                 }
-                clearValsOnScreen = false;
-                isSecond = false;
-                first = answer;
-                operator = ' ';
-                calculatedAnswer = Integer.toString(answer);
-                screen.setText(calculatedAnswer);
-                String toastMessage = first + ", " + second + ", " + "Ans:" + answer;
-                Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT).show();
+
+                if ((answer == Integer.MIN_VALUE || first == Integer.MIN_VALUE || second == Integer.MIN_VALUE)){
+                    screen.setText("");
+                    first = Integer.MIN_VALUE;
+                    second = Integer.MIN_VALUE;
+                    answer = Integer.MIN_VALUE;
+
+                }else {
+                    String temp = Integer.toString(answer);
+                    screen.setText(temp);
+                    first = answer;
+                    second = Integer.MIN_VALUE;
+                }
+                screen.setText("");
             }
         });
 
@@ -178,11 +132,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 screen.setText("");
-                isSecond = false;
-                first = 0;
-                second = 0;
+                first = Integer.MIN_VALUE;
+                second = Integer.MIN_VALUE;
             }
         });
+
 
         one.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -367,10 +321,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }
+        negOrPos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int temp = Integer.parseInt(screen.getText().toString());
+                temp *= -1;
+                screen.setText(temp);
 
-    String getTextfieldText(){
-        String text = screen.getText().toString();
-        return text;
+            }
+        });
     }
+    public void equate(){ equals.performClick(); }
+
+
 }
