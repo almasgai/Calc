@@ -10,9 +10,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.net.Inet4Address;
-import java.util.ArrayList;
-
 import me.grantland.widget.AutofitHelper;
 
 /**
@@ -26,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     boolean clearValsOnScreen = false;
     int first, second, answer;
     char operator;
+    String temp;
+
 
 
     @Override
@@ -62,18 +61,23 @@ public class MainActivity extends AppCompatActivity {
         plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                operator = '+';
                 if (screen.getText() != "" && first == Integer.MIN_VALUE){
                     first = Integer.parseInt(screen.getText().toString());
-                    operator = '+';
                     screen.setText("");
+                }
 
-
-                } else if (screen.getText() == "" && first != Integer.MIN_VALUE){
+                // This is most likely not need after all. Think about it: If first already has a
+                // number value not equal to MIN_INT and this function gets called, plus will
+                // copy the input from the screen and save it as second which will be the same value
+                // as first
+                /* if (first != Integer.MIN_VALUE && screen.getText() != ""){
                     second = Integer.parseInt(screen.getText().toString());
                     operator = '+';
                     equate();
 
-                }
+                }*/
 
                 else { Toast.makeText(getApplicationContext(), "Please enter value", Toast.LENGTH_SHORT).show(); }
 
@@ -87,11 +91,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                Toast.makeText(getApplicationContext(), first + ", " + second, Toast.LENGTH_LONG).show();
+
+                second = Integer.parseInt(screen.getText().toString());
+
                 switch (operator){
 
                     case '+':
                         answer = first + second;
-                        screen.setText(answer);
+                        temp = Integer.toString(answer);
+                        screen.setText(temp);
                         break;
 
                     case '-':
@@ -111,20 +120,15 @@ public class MainActivity extends AppCompatActivity {
 
                 }
 
-                if ((answer == Integer.MIN_VALUE || first == Integer.MIN_VALUE || second == Integer.MIN_VALUE)){
-                    screen.setText("");
-                    first = Integer.MIN_VALUE;
-                    second = Integer.MIN_VALUE;
-                    answer = Integer.MIN_VALUE;
+                Toast.makeText(getApplicationContext(), first + ", " + second + ", " + temp, Toast.LENGTH_LONG).show();
 
-                }else {
-                    String temp = Integer.toString(answer);
+                    temp = Integer.toString(answer);
                     screen.setText(temp);
                     first = answer;
                     second = Integer.MIN_VALUE;
                 }
-                screen.setText("");
-            }
+
+
         });
 
         
