@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import me.grantland.widget.AutofitHelper;
 
 /**
@@ -21,9 +22,12 @@ public class MainActivity extends AppCompatActivity {
     Button clear, negOrPos, percent, divide, seven, eight, nine, multiply, four, five,
             six, minus, one, two, three, plus, zero, decimal, equals;
     boolean clearValsOnScreen = false;
-    int first, second, answer;
+    double first, second, answer;
     char operator;
     String temp;
+    int intTemp;
+    double doubleTemp;
+    boolean hasDecimal = false;
 
 
 
@@ -58,13 +62,26 @@ public class MainActivity extends AppCompatActivity {
         screen      = findViewById(R.id.screenText);
         AutofitHelper.create(screen);
 
+        percent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doubleTemp = Double.parseDouble(screen.getText().toString());
+                doubleTemp /= 100;
+                screen.setText(String.valueOf(doubleTemp));
+
+            }
+        });
+
         plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 operator = '+';
                 if (screen.getText() != "" && first == Integer.MIN_VALUE){
-                    first = Integer.parseInt(screen.getText().toString());
+                    first = Double.parseDouble(screen.getText().toString());
+                    if (first / Math.floor(first) != 0){
+                        hasDecimal = true;
+                    }
                     screen.setText("");
                 }
 
@@ -79,10 +96,76 @@ public class MainActivity extends AppCompatActivity {
 
                 }*/
 
-                else { Toast.makeText(getApplicationContext(), "Please enter value", Toast.LENGTH_SHORT).show(); }
+                screen.setText("");
+                hasDecimal = false;
+            }
+        });
+
+        multiply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                operator = '*';
+                if (screen.getText() != "" && first == Integer.MIN_VALUE){
+                    first = Double.parseDouble(screen.getText().toString());
+                    screen.setText("");
+                }
 
                 screen.setText("");
+                hasDecimal = false;
 
+            }
+        });
+
+        divide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                operator = '/';
+                if (screen.getText() != "" && first == Integer.MIN_VALUE){
+                    first = Double.parseDouble(screen.getText().toString());
+                    screen.setText("");
+                }
+
+                screen.setText("");
+                hasDecimal = false;
+            }
+        });
+
+        minus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                operator = '-';
+                if (screen.getText() != "" && first == Integer.MIN_VALUE){
+                    first = Double.parseDouble(screen.getText().toString());
+                    screen.setText("");
+                }
+                screen.setText("");
+                hasDecimal = false;
+            }
+        });
+
+        decimal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (screen.getText() == ""){
+                    screen.setText("0.");
+                    hasDecimal = true;
+                    return;
+                }
+
+                if (screen.getText() != ""){
+                    try {
+                        intTemp = Integer.parseInt(screen.getText().toString());
+                        temp = Integer.toString(intTemp) + ".";
+                        screen.setText(temp);
+                        hasDecimal = true;
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(), "Number is already a double", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
 
@@ -91,44 +174,61 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Toast.makeText(getApplicationContext(), first + ", " + second, Toast.LENGTH_LONG).show();
-
-                second = Integer.parseInt(screen.getText().toString());
+                second = Double.parseDouble(screen.getText().toString());
 
                 switch (operator){
 
                     case '+':
                         answer = first + second;
-                        temp = Integer.toString(answer);
+                        temp = Double.toString(answer);
                         screen.setText(temp);
                         break;
 
                     case '-':
                         answer = first - second;
+                        temp = Double.toString(answer);
+                        screen.setText(temp);
                         break;
 
                     case '/':   answer = first / second;
+                        temp = Double.toString(answer);
+                        screen.setText(temp);
                         break;
 
                     case '*':   answer = first * second;
+                        temp = Double.toString(answer);
+                        screen.setText(temp);
                         break;
 
                     default:
-                        Log.i("ANSWER:", Integer.toString(answer));
+                        Log.i("ANSWER:", Double.toString(answer));
                         screen.setText("");
                         break;
 
                 }
 
-                Toast.makeText(getApplicationContext(), first + ", " + second + ", " + temp, Toast.LENGTH_LONG).show();
+                    doubleTemp= Double.parseDouble(Double.toString(answer));
+                    intTemp = Integer.parseInt(Integer.toString((int)answer));
 
-                    temp = Integer.toString(answer);
-                    screen.setText(temp);
+                    if((doubleTemp % intTemp) == 0 || doubleTemp == 0.0){
+                        screen.setText(String.valueOf(intTemp));
+                    }else {
+                        String literal = Double.toString(doubleTemp);
+                        int length = literal.length();
+
+                        if (length > 10){
+                            screen.setText(String.format("%.3f", doubleTemp));
+                        }
+                        else {
+                            screen.setText(String.valueOf(doubleTemp));
+                        }
+
+                    }
                     first = answer;
-                    second = Integer.MIN_VALUE;
+                    second = first;
+                    answer = Integer.MIN_VALUE;
+                    hasDecimal = false;
                 }
-
-
         });
 
         
@@ -138,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
                 screen.setText("");
                 first = Integer.MIN_VALUE;
                 second = Integer.MIN_VALUE;
+                hasDecimal = false;
             }
         });
 
@@ -145,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
         one.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (clearValsOnScreen == true){
+                if (clearValsOnScreen){
                     screen.setText("");
                     clearValsOnScreen = false;
                 }
@@ -165,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
         two.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (clearValsOnScreen == true){
+                if (clearValsOnScreen){
                     screen.setText("");
                     clearValsOnScreen = false;
                 }
@@ -183,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
         three.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (clearValsOnScreen == true){
+                if (clearValsOnScreen){
                     screen.setText("");
                     clearValsOnScreen = false;
                 }
@@ -201,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
         four.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (clearValsOnScreen == true){
+                if (clearValsOnScreen){
                     screen.setText("");
                     clearValsOnScreen = false;
                 }
@@ -219,7 +320,7 @@ public class MainActivity extends AppCompatActivity {
         five.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (clearValsOnScreen == true){
+                if (clearValsOnScreen){
                     screen.setText("");
                     clearValsOnScreen = false;
                 }
@@ -237,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
         six.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (clearValsOnScreen == true){
+                if (clearValsOnScreen){
                     screen.setText("");
                     clearValsOnScreen = false;
                 }
@@ -255,7 +356,7 @@ public class MainActivity extends AppCompatActivity {
         seven.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (clearValsOnScreen == true){
+                if (clearValsOnScreen){
                     screen.setText("");
                     clearValsOnScreen = false;
                 }
@@ -273,7 +374,7 @@ public class MainActivity extends AppCompatActivity {
         eight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (clearValsOnScreen == true){
+                if (clearValsOnScreen){
                     screen.setText("");
                     clearValsOnScreen = false;
                 }
@@ -291,10 +392,7 @@ public class MainActivity extends AppCompatActivity {
         nine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (clearValsOnScreen == true){
-                    screen.setText("");
-                    clearValsOnScreen = false;
-                }
+
                 screen.append("9");
                 nine.setTextColor(Color.CYAN);
                 new Handler().postDelayed(new Runnable() {
@@ -309,10 +407,7 @@ public class MainActivity extends AppCompatActivity {
         zero.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (clearValsOnScreen == true){
-                    screen.setText("");
-                    clearValsOnScreen = false;
-                }
+                clearScreen();
                 screen.append("0");
                 zero.setTextColor(Color.CYAN);
                 new Handler().postDelayed(new Runnable() {
@@ -328,14 +423,34 @@ public class MainActivity extends AppCompatActivity {
         negOrPos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int temp = Integer.parseInt(screen.getText().toString());
-                temp *= -1;
-                screen.setText(temp);
 
+                doubleTemp= Double.parseDouble(screen.getText().toString());
+                intTemp = (int)Integer.parseInt(screen.getText().toString());
+
+                if (doubleTemp > 0 && doubleTemp < 1 ){
+                    doubleTemp *= -1;
+                    screen.setText(String.valueOf(doubleTemp));
+                }
+                else {
+                    if(((doubleTemp % intTemp) == 0) && doubleTemp > 1 || doubleTemp == 0.0){
+                        intTemp *= -1;
+                        screen.setText(String.valueOf(intTemp));
+                    }else {
+                        doubleTemp *= -1;
+                        screen.setText(String.valueOf(doubleTemp));
+                    }
+
+                    intTemp = Integer.parseInt(screen.getText().toString());
+                    intTemp *= -1;
+                }
             }
         });
     }
-    public void equate(){ equals.performClick(); }
 
-
+    public void clearScreen() {
+        if (clearValsOnScreen) {
+            screen.setText("");
+            clearValsOnScreen = false;
+        }
+    }
 }
