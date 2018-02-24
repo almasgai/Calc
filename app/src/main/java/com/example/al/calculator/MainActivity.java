@@ -17,7 +17,7 @@ import me.grantland.widget.AutofitHelper;
  * Created by Al on 2/17/18.
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
     TextView screen;
     Button clear, negOrPos, percent, divide, seven, eight, nine, multiply, four, five,
             six, minus, one, two, three, plus, zero, decimal, equals;
@@ -62,110 +62,21 @@ public class MainActivity extends AppCompatActivity {
         screen      = findViewById(R.id.screenText);
         AutofitHelper.create(screen);
 
-        percent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                doubleTemp = Double.parseDouble(screen.getText().toString());
-                doubleTemp /= 100;
-                screen.setText(String.valueOf(doubleTemp));
-
-            }
-        });
-
-        plus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                operator = '+';
-                if (screen.getText() != "" && first == Integer.MIN_VALUE){
-                    first = Double.parseDouble(screen.getText().toString());
-                    if (first / Math.floor(first) != 0){
-                        hasDecimal = true;
-                    }
-                    screen.setText("");
-                }
-
-                // This is most likely not need after all. Think about it: If first already has a
-                // number value not equal to MIN_INT and this function gets called, plus will
-                // copy the input from the screen and save it as second which will be the same value
-                // as first
-                /* if (first != Integer.MIN_VALUE && screen.getText() != ""){
-                    second = Integer.parseInt(screen.getText().toString());
-                    operator = '+';
-                    equate();
-
-                }*/
-
-                screen.setText("");
-                hasDecimal = false;
-            }
-        });
-
-        multiply.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                operator = '*';
-                if (screen.getText() != "" && first == Integer.MIN_VALUE){
-                    first = Double.parseDouble(screen.getText().toString());
-                    screen.setText("");
-                }
-
-                screen.setText("");
-                hasDecimal = false;
-
-            }
-        });
-
-        divide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                operator = '/';
-                if (screen.getText() != "" && first == Integer.MIN_VALUE){
-                    first = Double.parseDouble(screen.getText().toString());
-                    screen.setText("");
-                }
-
-                screen.setText("");
-                hasDecimal = false;
-            }
-        });
-
-        minus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                operator = '-';
-                if (screen.getText() != "" && first == Integer.MIN_VALUE){
-                    first = Double.parseDouble(screen.getText().toString());
-                    screen.setText("");
-                }
-                screen.setText("");
-                hasDecimal = false;
-            }
-        });
-
         decimal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (screen.getText() == ""){
-                    screen.setText("0.");
-                    hasDecimal = true;
-                    return;
-                }
-
-                if (screen.getText() != ""){
-                    try {
-                        intTemp = Integer.parseInt(screen.getText().toString());
-                        temp = Integer.toString(intTemp) + ".";
+                if (!hasDecimal){
+                    if (screen.getText() != ""){
+                        temp = screen.getText().toString();
+                        temp += ".";
                         screen.setText(temp);
-                        hasDecimal = true;
-                    }catch (Exception e){
-                        Toast.makeText(getApplicationContext(), "Number is already a double", Toast.LENGTH_SHORT).show();
+                    }else {
+                        screen.setText("0.");
                     }
                 }
+
+                hasDecimal = true;
             }
         });
 
@@ -174,52 +85,54 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                second = Double.parseDouble(screen.getText().toString());
+                try {
+                    second = Double.parseDouble(screen.getText().toString());
 
-                switch (operator){
+                    switch (operator) {
 
-                    case '+':
-                        answer = first + second;
-                        temp = Double.toString(answer);
-                        screen.setText(temp);
-                        break;
+                        case '+':
+                            answer = first + second;
+                            temp = Double.toString(answer);
+                            screen.setText(temp);
+                            break;
 
-                    case '-':
-                        answer = first - second;
-                        temp = Double.toString(answer);
-                        screen.setText(temp);
-                        break;
+                        case '-':
+                            answer = first - second;
+                            temp = Double.toString(answer);
+                            screen.setText(temp);
+                            break;
 
-                    case '/':   answer = first / second;
-                        temp = Double.toString(answer);
-                        screen.setText(temp);
-                        break;
+                        case '/':
+                            answer = first / second;
+                            temp = Double.toString(answer);
+                            screen.setText(temp);
+                            break;
 
-                    case '*':   answer = first * second;
-                        temp = Double.toString(answer);
-                        screen.setText(temp);
-                        break;
+                        case '*':
+                            answer = first * second;
+                            temp = Double.toString(answer);
+                            screen.setText(temp);
+                            break;
 
-                    default:
-                        Log.i("ANSWER:", Double.toString(answer));
-                        screen.setText("");
-                        break;
+                        default:
+                            Log.i("ANSWER:", Double.toString(answer));
+                            screen.setText("");
+                            break;
 
-                }
+                    }
 
-                    doubleTemp= Double.parseDouble(Double.toString(answer));
-                    intTemp = Integer.parseInt(Integer.toString((int)answer));
+                    doubleTemp = Double.parseDouble(Double.toString(answer));
+                    intTemp = Integer.parseInt(Integer.toString((int) answer));
 
-                    if((doubleTemp % intTemp) == 0 || doubleTemp == 0.0){
+                    if ((doubleTemp % intTemp) == 0 || doubleTemp == 0.0) {
                         screen.setText(String.valueOf(intTemp));
-                    }else {
+                    } else {
                         String literal = Double.toString(doubleTemp);
                         int length = literal.length();
 
-                        if (length > 10){
+                        if (length > 10) {
                             screen.setText(String.format("%.3f", doubleTemp));
-                        }
-                        else {
+                        } else {
                             screen.setText(String.valueOf(doubleTemp));
                         }
 
@@ -229,9 +142,38 @@ public class MainActivity extends AppCompatActivity {
                     answer = Integer.MIN_VALUE;
                     hasDecimal = false;
                 }
+                catch (Exception e){
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "ERROR:" + e.toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
         });
 
-        
+
+        negOrPos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (screen.getText() == ""){ return; }
+                if (screen.getText() != ""){
+                    try{
+                        intTemp = Integer.parseInt(screen.getText().toString());
+                        intTemp *= -1;
+                        first = intTemp;
+                        screen.setText(String.valueOf(first));
+
+                    }catch(Exception e){
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "ERROR: " + e, Toast.LENGTH_SHORT).show();
+                        temp = screen.getText().toString();
+                        temp = "-" + temp;
+                        first = Double.parseDouble(temp);
+
+                        screen.setText(Double.toString(first));
+
+                    }
+                }
+            }
+        });
         clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -420,29 +362,85 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        negOrPos.setOnClickListener(new View.OnClickListener() {
+        percent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (screen.getText() != ""){
+                    doubleTemp = Double.parseDouble(screen.getText().toString());
+                    doubleTemp /= 100;
+                    screen.setText(String.valueOf(doubleTemp));
+                }
+            }
+        });
+
+        plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                doubleTemp= Double.parseDouble(screen.getText().toString());
-                intTemp = (int)Integer.parseInt(screen.getText().toString());
-
-                if (doubleTemp > 0 && doubleTemp < 1 ){
-                    doubleTemp *= -1;
-                    screen.setText(String.valueOf(doubleTemp));
-                }
-                else {
-                    if(((doubleTemp % intTemp) == 0) && doubleTemp > 1 || doubleTemp == 0.0){
-                        intTemp *= -1;
-                        screen.setText(String.valueOf(intTemp));
-                    }else {
-                        doubleTemp *= -1;
-                        screen.setText(String.valueOf(doubleTemp));
+                operator = '+';
+                if (screen.getText() != null && first == Integer.MIN_VALUE){
+                    first = Double.parseDouble(screen.getText().toString());
+                    if (first / Math.floor(first) != 1.0){
+                        hasDecimal = true;
                     }
-
-                    intTemp = Integer.parseInt(screen.getText().toString());
-                    intTemp *= -1;
                 }
+
+                // This is most likely not need after all. Think about it: If first already has a
+                // number value not equal to MIN_INT and this function gets called, plus will
+                // copy the input from the screen and save it as second which will be the same value
+                // as first
+                /* if (first != Integer.MIN_VALUE && screen.getText() != ""){
+                    second = Integer.parseInt(screen.getText().toString());
+                    operator = '+';
+                    equate();
+
+                }*/
+
+                screen.setText(null);
+                hasDecimal = false;
+            }
+        });
+
+        multiply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                operator = '*';
+                if (screen.getText() != null && first == Integer.MIN_VALUE){
+                    first = Double.parseDouble(screen.getText().toString());
+                }
+
+                screen.setText(null);
+                hasDecimal = false;
+
+            }
+        });
+
+        divide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                operator = '/';
+                if (screen.getText() != null && first == Integer.MIN_VALUE){
+                    first = Double.parseDouble(screen.getText().toString());
+                }
+
+                screen.setText(null);
+                hasDecimal = false;
+            }
+        });
+
+        minus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                operator = '-';
+                if ((screen.getText() != null) && (first == Integer.MIN_VALUE)){
+                    first = Double.parseDouble(screen.getText().toString());
+                }
+
+                screen.setText(null);
+                hasDecimal = false;
             }
         });
     }
