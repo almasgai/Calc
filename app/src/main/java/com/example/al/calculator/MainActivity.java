@@ -62,25 +62,6 @@ public class MainActivity extends AppCompatActivity{
         screen      = findViewById(R.id.screenText);
         AutofitHelper.create(screen);
 
-        decimal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (!hasDecimal){
-                    if (screen.getText() != ""){
-                        temp = screen.getText().toString();
-                        temp += ".";
-                        screen.setText(temp);
-                    }else {
-                        screen.setText("0.");
-                    }
-                }
-
-                hasDecimal = true;
-            }
-        });
-
-
         equals.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -122,11 +103,8 @@ public class MainActivity extends AppCompatActivity{
                     }
 
                     doubleTemp = Double.parseDouble(Double.toString(answer));
-                    intTemp = Integer.parseInt(Integer.toString((int) answer));
+                    answer = doubleTemp;
 
-                    if ((doubleTemp % intTemp) == 0 || doubleTemp == 0.0) {
-                        screen.setText(String.valueOf(intTemp));
-                    } else {
                         String literal = Double.toString(doubleTemp);
                         int length = literal.length();
 
@@ -136,9 +114,8 @@ public class MainActivity extends AppCompatActivity{
                             screen.setText(String.valueOf(doubleTemp));
                         }
 
-                    }
                     first = answer;
-                    second = first;
+                    second = Integer.MIN_VALUE;
                     answer = Integer.MIN_VALUE;
                     hasDecimal = false;
                 }
@@ -146,6 +123,31 @@ public class MainActivity extends AppCompatActivity{
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), "ERROR:" + e.toString(), Toast.LENGTH_SHORT).show();
                 }
+                equals.setTextColor(Color.RED);
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        equals.setTextColor(Color.WHITE);
+                    }
+                }, 250);
+            }
+        });
+
+        decimal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (!hasDecimal) {
+                    if (screen.getText() != "") {
+                        temp = screen.getText().toString();
+                        temp += ".";
+                        screen.setText(temp);
+                    } else {
+                        screen.setText("0.");
+                    }
+                }
+                hasDecimal = true;
             }
         });
 
@@ -153,24 +155,37 @@ public class MainActivity extends AppCompatActivity{
         negOrPos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (screen.getText() == ""){ return; }
-                if (screen.getText() != ""){
-                    try{
-                        intTemp = Integer.parseInt(screen.getText().toString());
-                        intTemp *= -1;
-                        first = intTemp;
-                        screen.setText(String.valueOf(first));
 
-                    }catch(Exception e){
-                        e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "ERROR: " + e, Toast.LENGTH_SHORT).show();
-                        temp = screen.getText().toString();
-                        temp = "-" + temp;
-                        first = Double.parseDouble(temp);
-
-                        screen.setText(Double.toString(first));
-
+                if (first == Integer.MIN_VALUE || second == Integer.MIN_VALUE) {
+                    if (screen.getText() == "-") {
+                        screen.setText("");
                     }
+                    else if (screen.getText() == ""){
+                        screen.setText("-");
+                    }
+                    else {
+                        if (first != Integer.MIN_VALUE) {
+                            second = Double.parseDouble(screen.getText().toString());
+                            second *= -1;
+                            screen.setText(String.valueOf(second));
+                        } else {
+                            first = Double.parseDouble(screen.getText().toString());
+                            first *= -1;
+                            screen.setText(String.valueOf(first));
+                        }
+                    }
+
+                    negOrPos.setTextColor(Color.RED);
+                    new Handler().postDelayed(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            negOrPos.setTextColor(Color.WHITE);
+                        }
+                    }, 250);
+                }
+                else if (screen.getText() == null || screen.getText() == ""){
+                    screen.setText("-");
                 }
             }
         });
@@ -181,6 +196,15 @@ public class MainActivity extends AppCompatActivity{
                 first = Integer.MIN_VALUE;
                 second = Integer.MIN_VALUE;
                 hasDecimal = false;
+
+                clear.setTextColor(Color.RED);
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        clear.setTextColor(Color.WHITE);
+                    }
+                }, 250);
             }
         });
 
@@ -201,7 +225,7 @@ public class MainActivity extends AppCompatActivity{
                     public void run() {
                         one.setTextColor(Color.WHITE);
                     }
-                }, 500);
+                }, 250);
             }
         });
 
@@ -365,25 +389,46 @@ public class MainActivity extends AppCompatActivity{
         percent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (screen.getText() != ""){
-                    doubleTemp = Double.parseDouble(screen.getText().toString());
-                    doubleTemp /= 100;
-                    screen.setText(String.valueOf(doubleTemp));
+                if (second == Integer.MIN_VALUE) {
+
+                    if (screen.getText() != "") {
+                        doubleTemp = Double.parseDouble(screen.getText().toString());
+                        doubleTemp /= 100;
+                        screen.setText(String.valueOf(doubleTemp));
+                    }
                 }
+                percent.setTextColor(Color.RED);
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        percent.setTextColor(Color.WHITE);
+                    }
+                }, 250);
             }
         });
 
         plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (second == Integer.MIN_VALUE){
                 operator = '+';
-                if (screen.getText() != null && first == Integer.MIN_VALUE){
-                    first = Double.parseDouble(screen.getText().toString());
-                    if (first / Math.floor(first) != 1.0){
-                        hasDecimal = true;
+                    if (screen.getText() != null && first == Integer.MIN_VALUE){
+                        first = Double.parseDouble(screen.getText().toString());
+                        if (first / Math.floor(first) != 1.0){
+                            hasDecimal = true;
+                        }
                     }
                 }
+                plus.setTextColor(Color.RED);
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        plus.setTextColor(Color.WHITE);
+                    }
+                }, 250);
+
 
                 // This is most likely not need after all. Think about it: If first already has a
                 // number value not equal to MIN_INT and this function gets called, plus will
@@ -404,44 +449,74 @@ public class MainActivity extends AppCompatActivity{
         multiply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (second == Integer.MIN_VALUE) {
 
-                operator = '*';
-                if (screen.getText() != null && first == Integer.MIN_VALUE){
-                    first = Double.parseDouble(screen.getText().toString());
+                    operator = '*';
+                    if (screen.getText() != null && first == Integer.MIN_VALUE) {
+                        first = Double.parseDouble(screen.getText().toString());
+                    }
+
+                    screen.setText(null);
+                    hasDecimal = false;
+
+                    multiply.setTextColor(Color.RED);
+                    new Handler().postDelayed(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            multiply.setTextColor(Color.WHITE);
+                        }
+                    }, 250);
                 }
-
-                screen.setText(null);
-                hasDecimal = false;
-
             }
         });
 
         divide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (second == Integer.MIN_VALUE) {
+                    operator = '/';
+                    if (screen.getText() != null && first == Integer.MIN_VALUE) {
+                        first = Double.parseDouble(screen.getText().toString());
+                    }
 
-                operator = '/';
-                if (screen.getText() != null && first == Integer.MIN_VALUE){
-                    first = Double.parseDouble(screen.getText().toString());
+                    screen.setText(null);
+                    hasDecimal = false;
+
+                    divide.setTextColor(Color.RED);
+                    new Handler().postDelayed(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            divide.setTextColor(Color.WHITE);
+                        }
+                    }, 250);
                 }
-
-                screen.setText(null);
-                hasDecimal = false;
             }
         });
 
         minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (second == Integer.MIN_VALUE) {
+                    operator = '-';
+                    if ((screen.getText() != null) && (first == Integer.MIN_VALUE)) {
+                        first = Double.parseDouble(screen.getText().toString());
+                    }
 
-                operator = '-';
-                if ((screen.getText() != null) && (first == Integer.MIN_VALUE)){
-                    first = Double.parseDouble(screen.getText().toString());
+                    screen.setText(null);
+                    hasDecimal = false;
                 }
+                minus.setTextColor(Color.RED);
+                new Handler().postDelayed(new Runnable() {
 
-                screen.setText(null);
-                hasDecimal = false;
+                    @Override
+                    public void run() {
+                        minus.setTextColor(Color.WHITE);
+                    }
+                }, 250);
             }
+
         });
     }
 
